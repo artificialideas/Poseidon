@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/trade/")
 public class TradeController {
     // TODO: Inject Trade service
 
@@ -19,24 +20,24 @@ public class TradeController {
     public String home(Model model)
     {
         // TODO: find all Trade, add to model
-        return "trade/list";
+        return "list";
     }
 
     @GetMapping("/trade/add")
     public String addUser(Trade bid) {
-        return "trade/add";
+        return "add";
     }
 
     @PostMapping("/trade/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
         // TODO: check data valid and save to db, after saving return Trade list
-        return "trade/add";
+        return "add";
     }
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get Trade by Id and to model then show to the form
-        return "trade/update";
+        return "update";
     }
 
     @PostMapping("/trade/update/{id}")
