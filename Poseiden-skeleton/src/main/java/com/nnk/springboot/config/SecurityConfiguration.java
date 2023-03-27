@@ -1,3 +1,4 @@
+/*
 package com.nnk.springboot.config;
 
 import com.nnk.springboot.service.CustomUserDetailService;
@@ -55,3 +56,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .permitAll();
     }
 }
+*/
