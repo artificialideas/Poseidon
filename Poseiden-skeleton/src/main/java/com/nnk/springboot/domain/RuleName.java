@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Table(name = "rulename")
 public class RuleName {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "Id")
     private Integer id;
 

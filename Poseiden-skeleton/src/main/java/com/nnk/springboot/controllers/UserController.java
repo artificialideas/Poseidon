@@ -13,27 +13,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
+@RequestMapping("/user/")
 public class UserController {
     private final String SECURED_URL = "user";
     @Autowired
     private UserService userService;
 
     /**
-     * LOGIN
-     */
-    @RequestMapping("/")
-    public String root() {
-        return "redirect:/login";
-    }
-    @RequestMapping("/login")
-    public String login() {
-        return "login";
-    }
-
-    /**
-     * HOMEPAGE
+     * USERS LIST
      */
     @RequestMapping("/user/list")
     public String home(Model model) {
@@ -41,19 +31,20 @@ public class UserController {
         return SECURED_URL + "/list";
     }
 
+    /* -- Add user */
     @GetMapping("/user/add")
-    public String addUser(User bid) {
+    public String addUser(Model model) {
         return SECURED_URL + "/add";
     }
     @PostMapping("/user/validate")
     public String validate(
-            @Valid User user,
+            @Valid User newUser,
             BindingResult result,
             Model model) {
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
-            userService.save(user);
+            newUser.setPassword(encoder.encode(newUser.getPassword()));
+            userService.save(newUser);
 
             model.addAttribute("users", userService.findAll());
             return "redirect:/user/list";
@@ -61,6 +52,7 @@ public class UserController {
         return SECURED_URL + "/add";
     }
 
+    /* -- Update user */
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(
             @PathVariable("id") Integer id,
@@ -74,22 +66,26 @@ public class UserController {
     @PostMapping("/user/update/{id}")
     public String updateUser(
             @PathVariable("id") Integer id,
-            @Valid User user,
+            @Valid User updateUser,
             BindingResult result,
             Model model) {
-        if (result.hasErrors()) {
-            return SECURED_URL + "/update";
+        if (!result.hasErrors()) {
+            Optional<User> savedUser = userService.findById(id);
+
+            if (updateUser != null && savedUser.isPresent()) {
+                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+                updateUser.setPassword(encoder.encode(updateUser.getPassword()));
+                updateUser.setId(id);
+                userService.save(updateUser);
+
+                model.addAttribute("users", userService.findAll());
+                return "redirect:/user/list";
+            }
         }
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setId(id);
-        userService.save(user);
-
-        model.addAttribute("users", userService.findAll());
-        return "redirect:/user/list";
+        return SECURED_URL + "/update";
     }
 
+    /* -- Delete user */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(
             @PathVariable("id") Integer id,

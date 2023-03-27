@@ -10,16 +10,28 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("app")
 public class LoginController {
-
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("login")
+
+    /**
+     * LOGIN
+     */
+    @RequestMapping("/")
+    public String root() {
+        return "redirect:/login";
+    }
+    @RequestMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    /*@GetMapping("login")
     public ModelAndView login() {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("login");
         return mav;
-    }
+    }*/
 
     @GetMapping("secure/article-details")
     public ModelAndView getAllUserArticles() {

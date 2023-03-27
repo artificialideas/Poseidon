@@ -1,4 +1,4 @@
-package com.nnk.springboot.securityConfig;
+package com.nnk.springboot.config;
 
 import com.nnk.springboot.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,24 +35,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/register",
-                        "/register/**",
-                        "/login**",
+                .antMatchers("/login**",
+                        "/403**",
                         "/static/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/user/home", true)
-                .failureUrl("/login?error=true")
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/user/home", true)
+                    .failureUrl("/login?error=true")
                 .and()
                 .logout()
-                .invalidateHttpSession(true).clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
-                .permitAll();
+                    .invalidateHttpSession(true).clearAuthentication(true)
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/login?logout")
+                    .permitAll();
     }
 }
