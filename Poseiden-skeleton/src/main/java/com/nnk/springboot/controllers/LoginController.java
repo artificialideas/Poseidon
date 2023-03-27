@@ -17,21 +17,21 @@ public class LoginController {
     /**
      * LOGIN
      */
-    @RequestMapping("/")
+    /*@RequestMapping("/")
     public String root() {
         return "redirect:/login";
     }
     @RequestMapping("/login")
     public String login() {
         return "login";
-    }
+    }*/
 
-    /*@GetMapping("login")
+    @GetMapping("login")
     public ModelAndView login() {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("login");
         return mav;
-    }*/
+    }
 
     @GetMapping("secure/article-details")
     public ModelAndView getAllUserArticles() {

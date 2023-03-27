@@ -1,4 +1,3 @@
-/*
 package com.nnk.springboot.config;
 
 import com.nnk.springboot.service.CustomUserDetailService;
@@ -37,11 +36,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/login**",
-                        "/403**",
+                        "/403",
                         "/static/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated()
+                .antMatchers("/user/list",
+                        "/user/add",
+                        "/user/update")
+                    .hasRole("ADMIN")
                 .and()
                 .formLogin()
                     .loginPage("/login")
@@ -56,4 +59,3 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .permitAll();
     }
 }
-*/

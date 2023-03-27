@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class UserController {
      * USERS LIST
      */
     @RequestMapping("/user/list")
+    @RolesAllowed("ADMIN")
     public String home(Model model) {
         model.addAttribute("users", userService.findAll());
         return SECURED_URL + "/list";
@@ -33,6 +35,7 @@ public class UserController {
 
     /* -- Add user */
     @GetMapping("/user/add")
+    @RolesAllowed("ADMIN")
     public String addUser(Model model) {
         return SECURED_URL + "/add";
     }
@@ -54,6 +57,7 @@ public class UserController {
 
     /* -- Update user */
     @GetMapping("/user/update/{id}")
+    @RolesAllowed("ADMIN")
     public String showUpdateForm(
             @PathVariable("id") Integer id,
             Model model) {
