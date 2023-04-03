@@ -1,31 +1,19 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.security.RolesAllowed;
+
 @Controller
-@RequestMapping("app")
+@RequestMapping("/")
 public class LoginController {
-    @Autowired
-    private UserRepository userRepository;
-
-
     /**
-     * LOGIN
+     * LOGIN & ERROR - public page
      */
-    /*@RequestMapping("/")
-    public String root() {
-        return "redirect:/login";
-    }
-    @RequestMapping("/login")
-    public String login() {
-        return "login";
-    }*/
-
     @GetMapping("login")
     public ModelAndView login() {
         ModelAndView mav = new ModelAndView();
@@ -33,13 +21,13 @@ public class LoginController {
         return mav;
     }
 
-    @GetMapping("secure/article-details")
+    /*@GetMapping("secure/article-details")
     public ModelAndView getAllUserArticles() {
         ModelAndView mav = new ModelAndView();
-        mav.addObject("users", userRepository.findAll());
+        mav.addObject("users", userService.findAll());
         mav.setViewName("user/list");
         return mav;
-    }
+    }*/
 
     @GetMapping("error")
     public ModelAndView error() {
@@ -48,5 +36,14 @@ public class LoginController {
         mav.addObject("errorMsg", errorMessage);
         mav.setViewName("403");
         return mav;
+    }
+
+    /**
+     * HOME PAGE - secured page
+     */
+    @GetMapping("/user/home")
+    @RolesAllowed({"ADMIN", "USER"})
+    public String homepage(Model model) {
+        return "user/home";
     }
 }

@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/")
+@RolesAllowed("ADMIN")
 public class UserController {
     private final String SECURED_URL = "user";
     @Autowired
@@ -26,20 +27,18 @@ public class UserController {
     /**
      * USERS LIST
      */
-    @RequestMapping("/user/list")
-    @RolesAllowed("ADMIN")
+    @GetMapping("list")
     public String home(Model model) {
         model.addAttribute("users", userService.findAll());
         return SECURED_URL + "/list";
     }
 
     /* -- Add user */
-    @GetMapping("/user/add")
-    @RolesAllowed("ADMIN")
+    @GetMapping("add")
     public String addUser(Model model) {
         return SECURED_URL + "/add";
     }
-    @PostMapping("/user/validate")
+    @PostMapping("validate")
     public String validate(
             @Valid User newUser,
             BindingResult result,
@@ -56,8 +55,7 @@ public class UserController {
     }
 
     /* -- Update user */
-    @GetMapping("/user/update/{id}")
-    @RolesAllowed("ADMIN")
+    @GetMapping("update/{id}")
     public String showUpdateForm(
             @PathVariable("id") Integer id,
             Model model) {
@@ -67,7 +65,7 @@ public class UserController {
         model.addAttribute("user", user);
         return SECURED_URL + "/update";
     }
-    @PostMapping("/user/update/{id}")
+    @PostMapping("update/{id}")
     public String updateUser(
             @PathVariable("id") Integer id,
             @Valid User updateUser,
@@ -90,7 +88,7 @@ public class UserController {
     }
 
     /* -- Delete user */
-    @GetMapping("/user/delete/{id}")
+    @GetMapping("delete/{id}")
     public String deleteUser(
             @PathVariable("id") Integer id,
             Model model) {
