@@ -1,6 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.service.TradeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,47 +11,82 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
-@RequestMapping("trade/")
+@RequestMapping("/trade/")
+@RolesAllowed({"ADMIN", "USER"})
 public class TradeController {
-    // TODO: Inject Trade service
+    private final String SECURED_URL = "trade";
+    @Autowired
+    private TradeService tradeService;
 
-    @RequestMapping("/trade/list")
-    public String home(Model model)
-    {
-        // TODO: find all Trade, add to model
-        return "list";
+    @GetMapping("list")
+    public String home(Model model) {
+        model.addAttribute("trade", tradeService.findAll());
+        return SECURED_URL + "/list";
     }
 
-    @GetMapping("/trade/add")
-    public String addUser(Trade bid) {
-        return "add";
+    /* -- Add trade */
+    @GetMapping("add")
+    public String addTrade(Trade trade) {
+        return SECURED_URL + "/add";
+    }
+    @PostMapping("validate")
+    public String validate(
+            @Valid Trade newTrade,
+            BindingResult result,
+            Model model) {
+        if (!result.hasErrors()) {
+            tradeService.save(newTrade);
+
+            model.addAttribute("trade", tradeService.findAll());
+            return "redirect:/trade/list";
+        }
+        return SECURED_URL + "/add";
     }
 
-    @PostMapping("/trade/validate")
-    public String validate(@Valid Trade trade, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Trade list
-        return "add";
+    /* -- Update trade */
+    @GetMapping("update/{id}")
+    public String showUpdateForm(
+            @PathVariable("id") Integer id,
+            Model model) {
+        Trade trade = tradeService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
+
+        model.addAttribute("trade", trade);
+        return SECURED_URL + "/update";
+    }
+    @PostMapping("update/{id}")
+    public String updateTrade(
+            @PathVariable("id") Integer id,
+            @Valid Trade updateTrade,
+            BindingResult result,
+            Model model) {
+        if (!result.hasErrors()) {
+            Optional<Trade> savedTrade = tradeService.findById(id);
+
+            if (updateTrade != null && savedTrade.isPresent()) {
+                updateTrade.setId(id);
+                tradeService.save(updateTrade);
+
+                model.addAttribute("trade", tradeService.findAll());
+                return "redirect:/trade/list";
+            }
+        }
+        return SECURED_URL + "/update";
     }
 
-    @GetMapping("/trade/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Trade by Id and to model then show to the form
-        return "update";
-    }
+    /* -- Delete trade */
+    @GetMapping("delete/{id}")
+    public String deleteTrade(
+            @PathVariable("id") Integer id,
+            Model model) {
+        Trade trade = tradeService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
+        tradeService.delete(trade);
 
-    @PostMapping("/trade/update/{id}")
-    public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Trade and return Trade list
-        return "redirect:/trade/list";
-    }
-
-    @GetMapping("/trade/delete/{id}")
-    public String deleteTrade(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Trade by Id and delete the Trade, return to Trade list
+        model.addAttribute("trade", tradeService.findAll());
         return "redirect:/trade/list";
     }
 }

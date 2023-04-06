@@ -29,7 +29,7 @@ public class CurveController {
         return SECURED_URL + "/list";
     }
 
-    /* -- Add bid */
+    /* -- Add curve point */
     @GetMapping("add")
     public String addCurve(CurvePoint curvePoint) {
         return SECURED_URL + "/add";
@@ -48,7 +48,7 @@ public class CurveController {
         return SECURED_URL + "/add";
     }
 
-    /* -- Update bid */
+    /* -- Update curve point */
     @GetMapping("update/{id}")
     public String showUpdateForm(
             @PathVariable("id") Integer id,
@@ -78,12 +78,12 @@ public class CurveController {
         return SECURED_URL + "/update";
     }
 
-    /* -- Delete bid */
+    /* -- Delete curve point */
     @GetMapping("delete/{id}")
-    public String deleteBid(
+    public String deleteCurvePoint(
             @PathVariable("id") Integer id,
             Model model) {
-        CurvePoint curvePoint = curvePointService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bid Id:" + id));
+        CurvePoint curvePoint = curvePointService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid curve Id:" + id));
         curvePointService.delete(curvePoint);
 
         model.addAttribute("curvePoint", curvePointService.findAll());
