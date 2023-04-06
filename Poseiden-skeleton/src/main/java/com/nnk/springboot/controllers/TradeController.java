@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/trade/")
@@ -30,12 +29,8 @@ public class TradeController {
     }
 
     /* -- Add trade */
-    @GetMapping("add")
-    public String addTrade(Trade trade) {
-        return SECURED_URL + "/add";
-    }
-    @PostMapping("validate")
-    public String validate(
+    @PostMapping("add")
+    public String addTrade(
             @Valid Trade newTrade,
             BindingResult result,
             Model model) {
@@ -49,15 +44,6 @@ public class TradeController {
     }
 
     /* -- Update trade */
-    @GetMapping("update/{id}")
-    public String showUpdateForm(
-            @PathVariable("id") Integer id,
-            Model model) {
-        Trade trade = tradeService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
-
-        model.addAttribute("trade", trade);
-        return SECURED_URL + "/update";
-    }
     @PostMapping("update/{id}")
     public String updateTrade(
             @PathVariable("id") Integer id,
@@ -65,9 +51,9 @@ public class TradeController {
             BindingResult result,
             Model model) {
         if (!result.hasErrors()) {
-            Optional<Trade> savedTrade = tradeService.findById(id);
+            Trade savedTrade = tradeService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
 
-            if (updateTrade != null && savedTrade.isPresent()) {
+            if (updateTrade != null && savedTrade != null) {
                 updateTrade.setId(id);
                 tradeService.save(updateTrade);
 

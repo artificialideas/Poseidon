@@ -34,9 +34,9 @@ public class LoginController {
     /**
      * HOME PAGE - secured page
      */
-    @GetMapping("/user/home")
+    @GetMapping("home")
     @RolesAllowed({"ADMIN", "USER"})
     public String home(Model model) {
-        return "user/home";
+        return "home";
     }
 }
