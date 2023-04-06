@@ -21,7 +21,8 @@ public class CurvePoint {
     @Column(name = "Id")
     private Integer id;
 
-    private String curveId;
+    @Column(name = "curveId")
+    private Integer curveId;
 
     @Column(name = "asOfDate")
     private Timestamp asOfDate;

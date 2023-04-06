@@ -43,7 +43,7 @@ public class LoginController {
      */
     @GetMapping("/user/home")
     @RolesAllowed({"ADMIN", "USER"})
-    public String homepage(Model model) {
+    public String home(Model model) {
         return "user/home";
     }
 }
