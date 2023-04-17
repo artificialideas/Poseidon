@@ -36,50 +36,68 @@
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">Name</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{name}" id="name" placeholder="Name" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="name"
+						   name="name"
+						   placeholder="Name">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="description" class="col-sm-2 control-label">Description</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{description}" id="description" placeholder="description" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="description"
+						   name="description"
+						   placeholder="Description">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="json" class="col-sm-2 control-label">JSON</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{json}" id="json" placeholder="JSON" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('json')}" th:errors="*{json}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="json"
+						   name="json"
+						   placeholder="JSON">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="template" class="col-sm-2 control-label">Template</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{template}" id="template" placeholder="Template" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('template')}" th:errors="*{template}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="template"
+						   name="template"
+						   placeholder="Template">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="sqlStr" class="col-sm-2 control-label">SQL</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{sqlStr}" id="sqlStr" placeholder="SQL" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('sqlStr')}" th:errors="*{sqlStr}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="sqlStr"
+						   name="sqlStr"
+						   placeholder="SQL">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="sqlPart" class="col-sm-2 control-label">SQLPart</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{sqlPart}" id="sqlPart" placeholder="SQLPart" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('sqlPart')}" th:errors="*{sqlPart}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="sqlPart"
+						   name="sqlPart"
+						   placeholder="SQLPart">
 				</div>
 			</div>
 
 			<div class="form-group">
 				<div class="col-sm-12">
-					<a class="btn btn-danger btn-sm" th:href="@{/rating/list}" title="Cancel">Cancel</a>
-					<input class="btn btn-primary btn-sm" type="submit" value="Add rating">
+					<a class="btn btn-danger btn-sm" th:href="@{/ruleName/list}" title="Cancel">Cancel</a>
+					<input class="btn btn-primary btn-sm" type="submit" value="Add rule">
 				</div>
 			</div>
 		</form>
