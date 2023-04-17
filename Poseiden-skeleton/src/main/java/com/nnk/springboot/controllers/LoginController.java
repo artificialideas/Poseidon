@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.security.RolesAllowed;
 
@@ -14,14 +13,16 @@ public class LoginController {
     /**
      * LOGIN & ERROR - public page
      */
+    @GetMapping("")
+    public String indexLogin() {
+        return "redirect:/login";
+    }
     @GetMapping("login")
-    public ModelAndView login() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("login");
-        return mav;
+    public String login() {
+        return "login";
     }
 
-    @GetMapping("error")
+    /*@GetMapping("error")
     public ModelAndView error() {
         ModelAndView mav = new ModelAndView();
         String errorMessage= "You are not authorized for the requested data.";
@@ -29,7 +30,7 @@ public class LoginController {
         mav.addObject("errorMsg", errorMessage);
         mav.setViewName("403");
         return mav;
-    }
+    }*/
 
     /**
      * HOME PAGE - secured page

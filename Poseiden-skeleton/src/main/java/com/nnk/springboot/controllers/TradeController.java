@@ -29,8 +29,12 @@ public class TradeController {
     }
 
     /* -- Add trade */
-    @PostMapping("add")
-    public String addTrade(
+    @GetMapping("add")
+    public String addTrade(Trade trade) {
+        return SECURED_URL + "/add";
+    }
+    @PostMapping("validate")
+    public String validate(
             @Valid Trade newTrade,
             BindingResult result,
             Model model) {
@@ -44,6 +48,15 @@ public class TradeController {
     }
 
     /* -- Update trade */
+    @GetMapping("update/{id}")
+    public String showUpdateForm(
+            @PathVariable("id") Integer id,
+            Model model) {
+        Trade trade = tradeService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
+
+        model.addAttribute("trade", trade);
+        return SECURED_URL + "/update";
+    }
     @PostMapping("update/{id}")
     public String updateTrade(
             @PathVariable("id") Integer id,

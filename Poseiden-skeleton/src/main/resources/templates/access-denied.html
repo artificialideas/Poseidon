@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Poseidon - Trade list</title>
+    <title>Poseidon - Access denied</title>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -14,7 +14,7 @@
 <body>
 <div class="container">
     <header class="row container">
-        <nav class="row">
+        <nav class="row" sec:authorize="hasRole(['ADMIN', 'USER'])">
             <div class="col-6">
                 <a th:href="@{/bidList/list}" title="Bid List">Bid List</a>&nbsp;|&nbsp;
                 <a th:href="@{/curvePoint/list}" title="Curve Points">Curve Points</a>&nbsp;|&nbsp;

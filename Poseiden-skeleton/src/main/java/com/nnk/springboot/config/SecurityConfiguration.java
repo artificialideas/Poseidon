@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -38,19 +39,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login**",
                         "/static/**")
                     .permitAll()
-                    .anyRequest()
-                    .authenticated()
+                .antMatchers("/access-denied")
+                    .permitAll()
                 .and()
                 .formLogin()
                     .loginPage("/login")
                     .permitAll()
-                    .defaultSuccessUrl("/user/home", true)
+                    .defaultSuccessUrl("/home", true)
                     .failureUrl("/login?error=true")
+                .and()
+                    .exceptionHandling()
+                    .accessDeniedHandler(accessDeniedHandler())
                 .and()
                 .logout()
                     .invalidateHttpSession(true).clearAuthentication(true)
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login?logout")
                     .permitAll();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 }

@@ -35,7 +35,7 @@ public class UserController {
 
     /* -- Add user */
     @GetMapping("add")
-    public String addUser(Model model) {
+    public String addUser(User user) {
         return SECURED_URL + "/add";
     }
     @PostMapping("validate")

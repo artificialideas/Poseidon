@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -31,8 +31,9 @@
             <h1>Home page</h1>
         </div>
     </header>
-    <p>
-        <a th:href="@{/login?logout}" title="Logout">Logout</a> or create one <a th:href="@{/user/list}" title="User management">User management</a>
+    <p>Welcome to Poseiden</p>
+    <p sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/user/list}" title="User management">User management</a>
     </p>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
