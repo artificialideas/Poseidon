@@ -13,8 +13,8 @@
 </head>
 <body>
 <div class="container">
-	<header class="row container">
-		<nav class="row">
+	<header class="row container mb-3">
+		<nav class="d-flex mb-2">
 			<div class="col-6">
 				<a th:href="@{/bidList/list}" title="Bid List">Bid List</a>&nbsp;|&nbsp;
 				<a th:href="@{/curvePoint/list}" title="Curve Points">Curve Points</a>&nbsp;|&nbsp;
@@ -27,38 +27,49 @@
 				<a th:href="@{/home}" title="Home">Home</a> | <a th:href="@{/logout}" title="Logout">Logout</a>
 			</div>
 		</nav>
-		<div class="row">
-			<h1>Update rating</h1>
-		</div>
+		<h1>Update rating</h1>
 	</header>
 	<div class="row">
 		<form th:action="@{/rating/update/{id}(id=${rating.id})}" th:object="${updateRating}" method="post" class="form-horizontal w-100">
 			<div class="form-group">
 				<label for="moodysRating" class="col-sm-2 control-label">MoodysRating</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{moodysRating}" id="moodysRating" placeholder="MoodysRating" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('moodysRating')}" th:errors="*{moodysRating}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="moodysRating"
+						   name="moodysRating"
+						   th:value="${rating.moodysRating}">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="sandPRating" class="col-sm-2 control-label">SandPRating</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{sandPRating}" id="sandPRating" placeholder="SandPRating" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('sandPRating')}" th:errors="*{sandPRating}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="sandPRating"
+						   name="sandPRating"
+						   th:value="${rating.sandPRating}">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="fitchRating" class="col-sm-2 control-label">FitchRating</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{fitchRating}" id="fitchRating" placeholder="FitchRating" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('fitchRating')}" th:errors="*{fitchRating}"></p>
+					<input type="text"
+						   class="form-control"
+						   id="fitchRating"
+						   name="fitchRating"
+						   th:value="${rating.fitchRating}">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="orderNumber" class="col-sm-2 control-label">Order</label>
 				<div class="col-sm-10">
-					<input type="number" min="0" th:field="*{orderNumber}" id="orderNumber" placeholder="0" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('orderNumber')}" th:errors="*{orderNumber}"></p>
+					<input type="number"
+						   class="form-control"
+						   min="0"
+						   id="orderNumber"
+						   name="orderNumber"
+						   th:value="${rating.orderNumber}">
 				</div>
 			</div>
 

@@ -36,10 +36,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
+                .antMatchers("/user/**")
+                    .hasRole("ADMIN")
+                .antMatchers("/home",
+                        "/bidList/**",
+                        "/curvePoint/**",
+                        "/rating/**",
+                        "/ruleName/**",
+                        "/trade/**")
+                    .access("hasRole('ADMIN') or hasRole('USER')")
                 .antMatchers("/login**",
                         "/static/**")
-                    .permitAll()
-                .antMatchers("/access-denied")
                     .permitAll()
                 .and()
                 .formLogin()

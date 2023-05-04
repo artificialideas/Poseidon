@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.service.RuleNameService;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/ruleName/")
 @RolesAllowed({"ADMIN", "USER"})
+@CommonsLog
 public class RuleNameController {
     private final String SECURED_URL = "ruleName";
     @Autowired
@@ -42,9 +44,11 @@ public class RuleNameController {
         if (!result.hasErrors()) {
             ruleNameService.save(newRule);
 
+            log.info("A new rule with id "+newRule.getId()+" has been created.");
             model.addAttribute("ruleName", ruleNameService.findAll());
             return "redirect:/ruleName/list";
         }
+        log.error("The new rule has not been created due to form errors.");
         return SECURED_URL + "/add";
     }
 
@@ -71,10 +75,12 @@ public class RuleNameController {
                 updateRule.setId(id);
                 ruleNameService.save(updateRule);
 
+                log.info("Rule with id "+id+" has been updated.");
                 model.addAttribute("ruleName", ruleNameService.findAll());
                 return "redirect:/ruleName/list";
             }
         }
+        log.error("Rule with id "+id+" has not been updated due to form errors.");
         return SECURED_URL + "/update";
     }
 
@@ -86,6 +92,7 @@ public class RuleNameController {
         RuleName ruleName = ruleNameService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid rule Id:" + id));
         ruleNameService.delete(ruleName);
 
+        log.info("Rule with id "+id+" has been deleted.");
         model.addAttribute("ruleName", ruleNameService.findAll());
         return "redirect:/ruleName/list";
     }

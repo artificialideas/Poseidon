@@ -13,8 +13,8 @@
 </head>
 <body>
 <div class="container">
-	<header class="row container">
-		<nav class="row">
+	<header class="row container mb-3">
+		<nav class="d-flex mb-2">
 			<div class="col-6">
 				<a th:href="@{/bidList/list}" title="Bid List">Bid List</a>&nbsp;|&nbsp;
 				<a th:href="@{/curvePoint/list}" title="Curve Points">Curve Points</a>&nbsp;|&nbsp;
@@ -27,35 +27,42 @@
 				<a th:href="@{/home}" title="Home">Home</a> | <a th:href="@{/logout}" title="Logout">Logout</a>
 			</div>
 		</nav>
-		<div class="row">
-			<h1>Update trade</h1>
-		</div>
+		<h1>Update trade</h1>
 	</header>
 	<div class="row">
-		<form th:action="@{/trade/update/{id}(id=${trade.tradeId})}" th:object="${updateTrade}" method="post" class="form-horizontal w-100">
+		<form th:action="@{/trade/update/{id}(id=${trade.id})}" th:object="${updateTrade}" method="post" class="form-horizontal w-100">
 			<div class="form-group">
 				<label for="account" class="col-sm-2 control-label">Account</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{account}" id="account" placeholder="Account" class="col-4" required>
-					<p class="text-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}">
-						Account is mandatory
-					</p>
+					<input type="text"
+						   class="form-control"
+						   id="account"
+						   name="account"
+						   th:value="${trade.account}"
+						   required>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="type" class="col-sm-2 control-label">Type</label>
 				<div class="col-sm-10">
-					<input type="text" th:field="*{type}" id="type" placeholder="Type" class="col-4" required>
-					<p class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">
-						Type is mandatory
-					</p>
+					<input type="text"
+						   class="form-control"
+						   id="type"
+						   name="type"
+						   th:value="${trade.type}"
+						   required>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="buyQuantity" class="col-sm-2 control-label">Buy quantity</label>
 				<div class="col-sm-10">
-					<input type="number" step="0.1" min="0" th:field="*{buyQuantity}" id="buyQuantity" placeholder="0.0" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('buyQuantity')}" th:errors="*{buyQuantity}"></p>
+					<input type="number"
+						   class="form-control"
+						   step="0.1"
+						   min="0"
+						   id="buyQuantity"
+						   name="buyQuantity"
+						   th:value="${trade.buyQuantity}">
 				</div>
 			</div>
 

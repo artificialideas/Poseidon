@@ -13,8 +13,8 @@
 </head>
 <body>
 <div class="container">
-	<header class="row container">
-		<nav class="row">
+	<header class="row container mb-3">
+		<nav class="d-flex mb-2">
 			<div class="col-6">
 				<a th:href="@{/bidList/list}" title="Bid List">Bid List</a>&nbsp;|&nbsp;
 				<a th:href="@{/curvePoint/list}" title="Curve Points">Curve Points</a>&nbsp;|&nbsp;
@@ -27,9 +27,7 @@
 				<a th:href="@{/home}" title="Home">Home</a> | <a th:href="@{/logout}" title="Logout">Logout</a>
 			</div>
 		</nav>
-		<div class="row">
-			<h1>Update trade</h1>
-		</div>
+		<h1>Update trade</h1>
 	</header>
 	<div class="row">
 		<form th:action="@{/trade/update/{id}(id=${trade.id})}" th:object="${updateTrade}" method="post" class="form-horizontal w-100">

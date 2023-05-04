@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.service.TradeService;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/trade/")
 @RolesAllowed({"ADMIN", "USER"})
+@CommonsLog
 public class TradeController {
     private final String SECURED_URL = "trade";
     @Autowired
@@ -41,9 +43,11 @@ public class TradeController {
         if (!result.hasErrors()) {
             tradeService.save(newTrade);
 
+            log.info("A new trade with id "+newTrade.getId()+" has been created.");
             model.addAttribute("trade", tradeService.findAll());
             return "redirect:/trade/list";
         }
+        log.error("The new trade has not been created due to form errors.");
         return SECURED_URL + "/add";
     }
 
@@ -70,10 +74,12 @@ public class TradeController {
                 updateTrade.setId(id);
                 tradeService.save(updateTrade);
 
+                log.info("Trade with id "+id+" has been updated.");
                 model.addAttribute("trade", tradeService.findAll());
                 return "redirect:/trade/list";
             }
         }
+        log.error("Trade with id "+id+" has not been updated due to form errors.");
         return SECURED_URL + "/update";
     }
 
@@ -85,6 +91,7 @@ public class TradeController {
         Trade trade = tradeService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
         tradeService.delete(trade);
 
+        log.info("Trade with id "+id+" has been deleted.");
         model.addAttribute("trade", tradeService.findAll());
         return "redirect:/trade/list";
     }

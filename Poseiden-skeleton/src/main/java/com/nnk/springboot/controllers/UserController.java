@@ -2,6 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.service.UserService;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/user/")
 @RolesAllowed("ADMIN")
+@CommonsLog
 public class UserController {
     private final String SECURED_URL = "user";
     @Autowired
@@ -48,9 +50,11 @@ public class UserController {
             newUser.setPassword(encoder.encode(newUser.getPassword()));
             userService.save(newUser);
 
+            log.info("A new user with id "+newUser.getId()+" has been created.");
             model.addAttribute("users", userService.findAll());
             return "redirect:/user/list";
         }
+        log.error("The new user has not been created due to form errors.");
         return SECURED_URL + "/add";
     }
 
@@ -80,10 +84,12 @@ public class UserController {
                 updateUser.setId(id);
                 userService.save(updateUser);
 
+                log.info("User with id "+id+" has been updated.");
                 model.addAttribute("users", userService.findAll());
                 return "redirect:/user/list";
             }
         }
+        log.error("User with id "+id+" has not been updated due to form errors.");
         return SECURED_URL + "/update";
     }
 
@@ -95,6 +101,7 @@ public class UserController {
         User user = userService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userService.delete(user);
 
+        log.info("User with id "+id+" has been deleted.");
         model.addAttribute("users", userService.findAll());
         return "redirect:/user/list";
     }
