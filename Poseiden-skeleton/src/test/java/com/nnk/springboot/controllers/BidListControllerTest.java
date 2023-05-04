@@ -2,18 +2,18 @@ package com.nnk.springboot.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.service.BidListService;
 import com.nnk.springboot.service.BidListServiceImpl;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,20 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BidListController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class BidListControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
-
 	@Autowired
 	private ObjectMapper objectMapper;
-
-	private BidListServiceImpl bidListService;
-
-	@BeforeEach
-	public void setup() throws IOException {
-		bidListService = new BidListServiceImpl();
-	}
+	@Autowired
+	private BidListService bidListService;
 
 	@Test
 	@WithMockUser(username="admin",roles={"USER","ADMIN"})
@@ -49,7 +44,7 @@ public class BidListControllerTest {
 		List<BidList> listOfBids = new ArrayList<>();
 			listOfBids.add(new BidList("Account Test 1", "Type Test 1", 10d));
 			listOfBids.add(new BidList("Account Test 2", "Type Test 2", 20d));
-		bidListService = new BidListServiceImpl();
+		//bidListService = new BidListServiceImpl();
 		bidListService.save(listOfBids.get(0));
 		bidListService.save(listOfBids.get(1));
 

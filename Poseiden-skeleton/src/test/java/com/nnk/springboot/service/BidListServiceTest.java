@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,17 +24,17 @@ public class BidListServiceTest {
 	@BeforeAll
 	public static void setUp() {
 		BidList bid1 = new BidList("Account Test 1", "Type Test 1", 10d);
-			bidListRepository.save(bid1);
+			bidListRepository.saveAndFlush(bid1);
 		BidList bid2 = new BidList("Account Test 2", "Type Test 2", 20d);
-			bidListRepository.save(bid2);
+			bidListRepository.saveAndFlush(bid2);
 	}
 
 	@Test
 	@DisplayName("Save bidList //save()")
 	public void givenNewBidList_whenCreateBidList_thenReturnBidListObject() {
 		BidList bid = new BidList("Account Test 3", "Type Test 3", 30d);
-			bidListRepository.save(bid);
-		BidList savedBid = bidListRepository.findById(bid.getId()).get();
+			bidListRepository.saveAndFlush(bid);
+		BidList savedBid = bidListRepository.getOne(bid.getId());
 
 		Assert.assertNotNull(savedBid.getId());
 		Assert.assertEquals(30d, savedBid.getBidQuantity(), 0.0);
@@ -43,10 +44,10 @@ public class BidListServiceTest {
 	@DisplayName("Update bidList //save()")
 	public void givenExistentBidList_whenUpdateBidList_thenReturnBidListObject() {
 		int bidId = 0;
-		BidList savedBid = bidListRepository.findById(bidId).get();
+		BidList savedBid = bidListRepository.getOne(bidId);
 			savedBid.setBidQuantity(11d);
-			bidListRepository.save(savedBid);
-		BidList updatedBid = bidListRepository.findById(savedBid.getId()).get();
+			bidListRepository.saveAndFlush(savedBid);
+		BidList updatedBid = bidListRepository.getOne(savedBid.getId());
 
 		Assert.assertEquals(11d, updatedBid.getBidQuantity(), 0.0);
 	}
@@ -63,7 +64,7 @@ public class BidListServiceTest {
 	@DisplayName("Find bidList //findById()")
 	public void givenBidList_whenFindByIdBidList_thenReturnBidListObject() {
 		int bidId = 0;
-		BidList bid = bidListRepository.findById(bidId).get();
+		BidList bid = bidListRepository.getOne(bidId);
 
 		Assert.assertEquals(Optional.ofNullable(bid.getId()), Optional.of(0));
 	}
@@ -72,10 +73,12 @@ public class BidListServiceTest {
 	@DisplayName("Delete bidList //delete()")
 	public void givenBidListObject_whenDeleteBidList_thenReturn200() {
 		int bidId = 0;
-		BidList savedBid = bidListRepository.findById(bidId).get();
-			bidListRepository.delete(savedBid);
-		Optional<BidList> bidList = bidListRepository.findById(bidId);
+		BidList savedBid = bidListRepository.getOne(bidId);
+		List<BidList> bidIds = new ArrayList<>();
+			bidIds.add(savedBid);
+			bidListRepository.deleteInBatch(bidIds);
+		BidList bidList = bidListRepository.getOne(bidId);
 
-		Assert.assertFalse(bidList.isPresent());
+		Assert.assertFalse(bidListRepository.findAll().contains(savedBid));
 	}
 }
