@@ -84,6 +84,8 @@ public class Trade {
     /**
      * Class constructors
      **/
+    public Trade() {}
+
     public Trade(String account, String type, Double buyQuantity) {
         this.account = account;
         this.type = type;

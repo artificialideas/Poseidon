@@ -39,6 +39,8 @@ public class CurvePoint {
     /**
      * Class constructors
      **/
+    public CurvePoint() {}
+
     public CurvePoint(Integer curveId, Double term, Double value) {
         this.curveId = curveId;
         this.term = term;

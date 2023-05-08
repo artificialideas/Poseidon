@@ -3,12 +3,12 @@ package com.nnk.springboot.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.service.BidListService;
-import com.nnk.springboot.service.BidListServiceImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,7 +33,7 @@ public class BidListControllerTest {
 	private MockMvc mockMvc;
 	@Autowired
 	private ObjectMapper objectMapper;
-	@Autowired
+	@MockBean
 	private BidListService bidListService;
 
 	@Test
@@ -92,7 +92,7 @@ public class BidListControllerTest {
 		int bidId = 1;
 		BidList savedBid = new BidList("Account Test", "Type Test", 10d);
 		BidList updatedBid = new BidList("Account", "Type", 20d);
-		bidListService = new BidListServiceImpl();
+		//bidListService = new BidListServiceImpl();
 
 		given(bidListService.findById(bidId)).willReturn(savedBid);
 		bidListService.save(updatedBid);
