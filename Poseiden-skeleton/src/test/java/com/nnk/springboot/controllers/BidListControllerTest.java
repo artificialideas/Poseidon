@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
@@ -44,7 +45,6 @@ public class BidListControllerTest {
 		List<BidList> listOfBids = new ArrayList<>();
 			listOfBids.add(new BidList("Account Test 1", "Type Test 1", 10d));
 			listOfBids.add(new BidList("Account Test 2", "Type Test 2", 20d));
-		//bidListService = new BidListServiceImpl();
 		bidListService.save(listOfBids.get(0));
 		bidListService.save(listOfBids.get(1));
 
@@ -92,9 +92,8 @@ public class BidListControllerTest {
 		int bidId = 1;
 		BidList savedBid = new BidList("Account Test", "Type Test", 10d);
 		BidList updatedBid = new BidList("Account", "Type", 20d);
-		//bidListService = new BidListServiceImpl();
 
-		given(bidListService.findById(bidId)).willReturn(savedBid);
+		given(bidListService.findById(bidId)).willReturn(Optional.of(savedBid));
 		bidListService.save(updatedBid);
 
 		// when -  action or the behaviour that we are going test
@@ -141,9 +140,7 @@ public class BidListControllerTest {
 	public void givenBidListObject_whenDeleteBidList_thenReturn200() throws Exception {
 		// given - precondition or setup
 		BidList bid = new BidList("Account Test", "Type Test", 10d);
-		List<BidList> bidIds = new ArrayList<>();
-			bidIds.add(bid);
-		willDoNothing().given(bidListService).delete(bidIds);
+		willDoNothing().given(bidListService).delete(bid);
 
 		// when -  action or the behaviour that we are going test
 		ResultActions response = mockMvc.perform(get("/bidList/delete/{id}", bid.getId()));

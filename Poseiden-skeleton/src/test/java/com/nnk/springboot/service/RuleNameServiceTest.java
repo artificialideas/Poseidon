@@ -1,11 +1,11 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.repositories.RuleNameRepository;
-import org.junit.Assert;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,69 +14,71 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RuleNameServiceTest {
-
 	@Autowired
-	private static RuleNameRepository ruleNameRepository;
-
-	@BeforeAll
-	public static void setUp() {
-		RuleName rule1 = new RuleName("Rule Name 1", "Description 1", "Json 1", "Template 1", "SQL 1", "SQL Part 1");
-			ruleNameRepository.save(rule1);
-		RuleName rule2 = new RuleName("Rule Name 2", "Description 2", "Json 2", "Template 2", "SQL 2", "SQL Part 2");
-			ruleNameRepository.save(rule2);
-	}
+	private RuleNameService ruleNameService;
 
 	@Test
+	@Order(1)
 	@DisplayName("Save ruleName //save()")
 	public void givenNewRuleName_whenCreateRuleName_thenReturnRuleNameObject() {
-		RuleName ruleName = new RuleName("Rule Name 3", "Description 3", "Json 3", "Template 3", "SQL 3", "SQL Part 3");
-			ruleNameRepository.save(ruleName);
-		RuleName savedRule = ruleNameRepository.findById(ruleName.getId()).get();
+		RuleName ruleName = new RuleName("Rule Name 1", "Description 1", "Json 1", "Template 1", "SQL 1", "SQL Part 1");
+			ruleNameService.save(ruleName);
+		RuleName savedRule = ruleNameService.findById(ruleName.getId()).get();
 
-		Assert.assertNotNull(savedRule.getId());
-		Assert.assertEquals("Rule Name 3", savedRule.getName());
+		assertNotNull(savedRule.getId());
+		assertEquals("Rule Name 1", savedRule.getName());
 	}
 
 	@Test
-	@DisplayName("Update ruleName //save()")
-	public void givenExistentRuleName_whenUpdateRuleName_thenReturnRuleNameObject() {
-		int ruleId = 0;
-		RuleName savedRule = ruleNameRepository.findById(ruleId).get();
-			savedRule.setName("Rule Name 0");
-			ruleNameRepository.save(savedRule);
-		RuleName updatedRule = ruleNameRepository.findById(savedRule.getId()).get();
-
-		Assert.assertEquals("Rule Name 0", updatedRule.getName());
-	}
-
-	@Test
+	@Order(2)
 	@DisplayName("Find ruleName //findAll()")
 	public void givenListOfRuleNames_whenFindAllRuleName_thenReturnRuleNamesList() {
-		List<RuleName> listResult = ruleNameRepository.findAll();
+		List<RuleName> listResult = ruleNameService.findAll();
 
-		Assert.assertTrue(listResult.size() > 0);
+		assertTrue(listResult.size() > 0);
 	}
 
 	@Test
+	@Order(3)
 	@DisplayName("Find ruleName //findById()")
 	public void givenRuleName_whenFindByIdRuleName_thenReturnRuleNameObject() {
-		int ruleId = 0;
-		RuleName ruleName = ruleNameRepository.findById(ruleId).get();
+		int ruleId = 1;
+		RuleName ruleName = ruleNameService.findById(ruleId).get();
 
-		Assert.assertEquals(Optional.ofNullable(ruleName.getId()), Optional.of(0));
+		assertEquals(Optional.ofNullable(ruleName.getId()), Optional.of(1));
 	}
 
 	@Test
+	@Order(4)
+	@DisplayName("Update ruleName //save()")
+	public void givenExistentRuleName_whenUpdateRuleName_thenReturnRuleNameObject() {
+		int ruleId = 1;
+		RuleName savedRule = ruleNameService.findById(ruleId).get();
+			savedRule.setName("Rule Name 0");
+			ruleNameService.save(savedRule);
+		RuleName updatedRule = ruleNameService.findById(savedRule.getId()).get();
+
+		assertEquals("Rule Name 0", updatedRule.getName());
+	}
+
+	@Test
+	@Order(5)
 	@DisplayName("Delete ruleName //delete()")
 	public void givenRuleNameObject_whenDeleteRuleName_thenReturn200() {
-		int ruleId = 0;
-		RuleName savedRule = ruleNameRepository.findById(ruleId).get();
-			ruleNameRepository.delete(savedRule);
-		Optional<RuleName> ruleName = ruleNameRepository.findById(ruleId);
+		int ruleId = 1;
+		RuleName savedRule = ruleNameService.findById(ruleId).get();
+			ruleNameService.delete(savedRule);
+		Optional<RuleName> ruleName = ruleNameService.findById(ruleId);
 
-		Assert.assertFalse(ruleName.isPresent());
+		assertFalse(ruleName.isPresent());
 	}
 }

@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/bidList/")
@@ -59,14 +57,10 @@ public class BidListController {
     public String showUpdateForm(
             @PathVariable("id") Integer id,
             Model model) {
-        BidList bidList = bidListService.findById(id);
+        BidList bidList = bidListService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bid Id:" + id));
 
-        if (bidList != null) {
-            model.addAttribute("bidList", bidList);
-            return SECURED_URL + "/update";
-        }
-        log.error("Invalid bid Id: " + id);
-        return "redirect:/bidList/list";
+        model.addAttribute("bidList", bidList);
+        return SECURED_URL + "/update";
     }
     @PostMapping("update/{id}")
     public String updateBid(
@@ -75,9 +69,9 @@ public class BidListController {
             BindingResult result,
             Model model) {
         if (!result.hasErrors()) {
-            BidList savedBid = bidListService.findById(id);
+            Optional<BidList> savedBid = bidListService.findById(id);
 
-            if (updateBid != null && savedBid != null) {
+            if (updateBid != null && savedBid.isPresent()) {
                 updateBid.setId(id);
                 bidListService.save(updateBid);
 
@@ -95,17 +89,11 @@ public class BidListController {
     public String deleteBid(
             @PathVariable("id") Integer id,
             Model model) {
-        BidList bid = bidListService.findById(id);
-        List<BidList> bidIds = new ArrayList<>();
-            bidIds.add(bid);
+        BidList bid = bidListService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid bid Id:" + id));
+        bidListService.delete(bid);
 
-        if (bid != null) {
-            bidListService.delete(bidIds);
-            log.info("Bid with id "+id+" has been deleted.");
-            model.addAttribute("bidList", bidListService.findAll());
-        } else
-            log.error("Invalid bid Id: " + id);
-
+        log.info("Bid with id "+id+" has been deleted.");
+        model.addAttribute("bidList", bidListService.findAll());
         return "redirect:/bidList/list";
     }
 }

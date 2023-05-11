@@ -30,7 +30,7 @@
         <h1>Home page</h1>
     </header>
     <p>Welcome to Poseiden</p>
-    <p sec:authorize="hasRole('ADMIN')">
+    <p sec:authorize-url="/user">
         <a th:href="@{/user/list}" title="User management">User management</a>
     </p>
 </div>
