@@ -3,6 +3,7 @@ package com.nnk.springboot.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.service.BidListService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +13,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,6 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class BidListControllerTest {
+	private final int ID = 1;
+	private BidList bid;
+
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
@@ -37,116 +37,76 @@ public class BidListControllerTest {
 	@MockBean
 	private BidListService bidListService;
 
+	@Before
+	public void setup() {
+		bid = new BidList("Account Test", "Type Test", 10d);
+			bidListService.save(bid);
+	}
+
 	@Test
 	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	@DisplayName("GET - List all bidList REST API //home()")
 	public void givenListOfBidLists_whenFindAllBidList_thenReturnBidListsList() throws Exception {
-		// given - precondition or setup
-		List<BidList> listOfBids = new ArrayList<>();
-			listOfBids.add(new BidList("Account Test 1", "Type Test 1", 10d));
-			listOfBids.add(new BidList("Account Test 2", "Type Test 2", 20d));
-		bidListService.save(listOfBids.get(0));
-		bidListService.save(listOfBids.get(1));
-
-		given(bidListService.findAll()).willReturn(listOfBids);
-
-		// when -  action or the behaviour that we are going test
-		ResultActions response = mockMvc.perform(get("/bidList/list"));
-
-		// then - verify the output
-		response.andExpect(status().isOk())
+		mockMvc.perform(get("/bidList/list"))
+				.andExpect(status().isOk())
 				.andDo(print())
-				.andExpect(jsonPath("$.size()",
-						is(listOfBids.size())));
+				.andExpect(jsonPath("$.size()", is(1)));
 	}
 
 	@Test
 	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	@DisplayName("POST - Create new bidList REST API //validate()")
 	public void givenBidListObject_whenCreateBidList_thenReturnSavedBidList() throws Exception {
-		// given - precondition or setup
-		BidList bid = new BidList("Account Test", "Type Test", 10d);
-		bidListService.save(bid);
-
-		// when - action or behaviour that we are going test
-		ResultActions response = mockMvc.perform(post("/bidList/validate")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(bid)));
-
-		// then - verify the result or output using assert statements
-		response.andDo(print())
+		mockMvc.perform(post("/bidList/validate")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(objectMapper.writeValueAsString(bid)))
 				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.account",
-						is(bid.getAccount())))
-				.andExpect(jsonPath("$.type",
-						is(bid.getType())))
-				.andExpect(jsonPath("$.bidQuantity",
-						is(bid.getBidQuantity())));
+				.andExpect(jsonPath("$.account", is(bid.getAccount())))
+				.andExpect(jsonPath("$.type", is(bid.getType())))
+				.andExpect(jsonPath("$.bidQuantity", is(bid.getBidQuantity())));
 	}
 
 	@Test
 	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	@DisplayName("POST - Update bidList REST API -> positive scenario //updateBid()")
 	public void givenUpdatedBidList_whenUpdateBidList_thenReturnUpdateBidListObject() throws Exception {
-		// given - precondition or setup
-		int bidId = 1;
-		BidList savedBid = new BidList("Account Test", "Type Test", 10d);
-		BidList updatedBid = new BidList("Account", "Type", 20d);
+		bid.setAccount("Account");
+		bid.setType("Type");
+		bid.setBidQuantity(20d);
 
-		given(bidListService.findById(bidId)).willReturn(Optional.of(savedBid));
-		bidListService.save(updatedBid);
-
-		// when -  action or the behaviour that we are going test
-		ResultActions response = mockMvc.perform(post("/bidList/update/{id}", bidId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(updatedBid)));
-
-		// then - verify the output
-		response.andExpect(status().isOk())
-				.andDo(print())
-				.andExpect(jsonPath("$.account",
-						is(updatedBid.getAccount())))
-				.andExpect(jsonPath("$.type",
-						is(updatedBid.getType())))
-				.andExpect(jsonPath("$.bidQuantity",
-						is(updatedBid.getBidQuantity())));
+		 mockMvc.perform(post("/bidList/update/" + ID)
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(objectMapper.writeValueAsString(bid)))
+				 .andExpect(status().isOk())
+				 .andExpect(jsonPath("$.account", is(bid.getAccount())))
+				 .andExpect(jsonPath("$.type", is(bid.getType())))
+				 .andExpect(jsonPath("$.bidQuantity", is(bid.getBidQuantity())));
 	}
 
 	@Test
 	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	@DisplayName("POST - Update bidList REST API -> negative scenario //updateBid()")
 	public void givenUpdatedBidList_whenUpdateBidList_thenReturn404() throws Exception {
-		// given - precondition or setup
-		int bidId = 1;
-		BidList savedBid = new BidList("Account Test", "Type Test", 10d);
-		BidList updatedBid = new BidList("Account", "Type", 20d);
+		BidList updatedBid = new BidList("Account 1", "Type 1", 21d);
 
-		//given(bidListService.findById(bidId)).then();
-		bidListService.save(updatedBid);
+		given(bidListService.findById(ID)).willReturn(Optional.empty());
+			bidListService.save(updatedBid);
 
-		// when -  action or the behaviour that we are going test
-		ResultActions response = mockMvc.perform(post("/bidList/update/{id}", bidId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(updatedBid)));
-
-		// then - verify the output
-		response.andExpect(status().isNotFound())
+		mockMvc.perform(post("/bidList/update/" + ID)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(updatedBid)))
+				.andExpect(status().isNotFound())
 				.andDo(print());
+
+		bidListService.delete(updatedBid);
 	}
 
 	@Test
 	@WithMockUser(username="admin",roles={"USER","ADMIN"})
 	@DisplayName("GET - Delete bidList REST API //deleteBid()")
 	public void givenBidListObject_whenDeleteBidList_thenReturn200() throws Exception {
-		// given - precondition or setup
-		BidList bid = new BidList("Account Test", "Type Test", 10d);
-		willDoNothing().given(bidListService).delete(bid);
-
-		// when -  action or the behaviour that we are going test
-		ResultActions response = mockMvc.perform(get("/bidList/delete/{id}", bid.getId()));
-
-		// then - verify the output
-		response.andExpect(status().isOk())
+		mockMvc.perform(get("/bidList/delete/" + bid.getId()))
+				.andExpect(status().isOk())
 				.andDo(print());
 	}
 }

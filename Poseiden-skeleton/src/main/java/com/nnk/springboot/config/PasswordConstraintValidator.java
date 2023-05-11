@@ -1,13 +1,10 @@
 package com.nnk.springboot.config;
 
 import com.google.common.base.Joiner;
-import org.passay.AlphabeticalSequenceRule;
 import org.passay.DigitCharacterRule;
 import org.passay.LengthRule;
-import org.passay.NumericalSequenceRule;
 import org.passay.PasswordData;
 import org.passay.PasswordValidator;
-import org.passay.QwertySequenceRule;
 import org.passay.RuleResult;
 import org.passay.SpecialCharacterRule;
 import org.passay.UppercaseCharacterRule;
@@ -26,14 +23,11 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
     public boolean isValid(final String password, final ConstraintValidatorContext context) {
         // @formatter:off
         final PasswordValidator validator = new PasswordValidator(Arrays.asList(
-                new LengthRule(8, 30),
-                new UppercaseCharacterRule(1),
-                new DigitCharacterRule(1),
-                new SpecialCharacterRule(1),
-                new NumericalSequenceRule(3,false),
-                new AlphabeticalSequenceRule(3,false),
-                new QwertySequenceRule(3,false),
-                new WhitespaceRule()));
+                new LengthRule(8, 30),                               // Between 8 and 30 char
+                new UppercaseCharacterRule(1),                  // At least 1 upper-case char
+                new DigitCharacterRule(1),                      // At least 1 digit
+                new SpecialCharacterRule(1),                    // At least 1 symbol
+                new WhitespaceRule()));                              // No whitespace
         final RuleResult result = validator.validate(new PasswordData(password));
         if (result.isValid()) {
             return true;
@@ -41,5 +35,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(Joiner.on(",").join(validator.getMessages(result))).addConstraintViolation();
         return false;
+        /*return password != null && password.matches("^(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])(?=\\D*\\d)(?=[^!#%]*[!#%])[A-Za-z0-9!#%]{8,30}$")
+                && (password.length() > 8) && (password.length() < 30);*/
     }
 }

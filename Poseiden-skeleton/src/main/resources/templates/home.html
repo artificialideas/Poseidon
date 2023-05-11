@@ -13,8 +13,8 @@
 </head>
 <body>
 <div class="container">
-    <header class="row container mb-3">
-        <nav class="d-flex mb-2">
+    <header class="mt-1 mb-3">
+        <nav class="row mb-2">
             <div class="col-6">
                 <a th:href="@{/bidList/list}" title="Bid List">Bid List</a>&nbsp;|&nbsp;
                 <a th:href="@{/curvePoint/list}" title="Curve Points">Curve Points</a>&nbsp;|&nbsp;
@@ -23,14 +23,14 @@
                 <a th:href="@{/ruleName/list}" title="Rule">Rule</a>
             </div>
             <div class="col-6 text-right">
-                Logged in user: <strong th:inline="text"  class="user">[[${#httpServletRequest.remoteUser}]]</strong>
+                Logged in user: <strong th:inline="text" class="user">[[${#httpServletRequest.remoteUser}]]</strong><br/>
                 <a th:href="@{/home}" title="Home">Home</a> | <a th:href="@{/logout}" title="Logout">Logout</a>
             </div>
         </nav>
         <h1>Home page</h1>
     </header>
     <p>Welcome to Poseiden</p>
-    <p sec:authorize-url="/user">
+    <p sec:authentication="ADMIN">
         <a th:href="@{/user/list}" title="User management">User management</a>
     </p>
 </div>

@@ -6,8 +6,6 @@ $(document).ready(function () {
             showErrors:true,
             errorMessages:{
                 wordLength: '<spring:message code="error.wordLength"/>',
-                wordNotEmail: '<spring:message code="error.wordNotEmail"/>',
-                wordSequences: '<spring:message code="error.wordSequences"/>',
                 wordLowercase: '<spring:message code="error.wordLowercase"/>',
                 wordUppercase: '<spring:message code="error.wordUppercase"/>',
                 wordOneNumber: '<spring:message code="error.wordOneNumber"/>',

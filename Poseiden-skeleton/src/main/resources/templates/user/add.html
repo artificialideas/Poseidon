@@ -13,13 +13,13 @@
 </head>
 <body>
 <div class="container">
-	<div class="row justify-content-end mt-1">
-		<a th:href="@{/home}" title="Home">Home</a>&nbsp;|&nbsp;<a th:href="@{/logout}" title="Logout">Logout</a>
-	</div>
-	<div class="row">
+	<header class="mt-1 mb-3">
+		<nav class="row mb-2 justify-content-end">
+			<a th:href="@{/home}" title="Home">Home</a>&nbsp;|&nbsp;<a th:href="@{/logout}" title="Logout">Logout</a>
+		</nav>
 		<h1>Add user</h1>
-	</div>
-	<div class="row">
+	</header>
+	<main>
 		<form th:action="@{/user/validate/}" th:object="${newUser}" method="post" class="form-horizontal w-100">
 			<div class="form-group">
 				<label for="fullname" class="col-sm-2 control-label">Full Name</label>
@@ -73,7 +73,7 @@
 				</div>
 			</div>
 		</form>
-	</div>
+	</main>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"

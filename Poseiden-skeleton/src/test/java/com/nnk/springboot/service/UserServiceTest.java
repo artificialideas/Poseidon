@@ -30,7 +30,7 @@ public class UserServiceTest {
 	@Order(1)
 	@DisplayName("Save user //save()")
 	public void givenNewUser_whenCreateUser_thenReturnUserObject() {
-		User user = new User("tester", "$2a$12$z4pEKxpUguejxE5AVLBSpe2rLJ8efjtgfQEJsjttVm1zlRmIlxQEu", "Tester TESTER", "USER");
+		User user = new User("tester", "testER00:)", "Tester TESTER", "USER");
 			userService.save(user);
 		User savedUser = userService.findById(user.getId()).get();
 

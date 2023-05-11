@@ -31,7 +31,7 @@ public class RatingServiceTest {
 	@DisplayName("Save rating //save()")
 	public void givenNewRating_whenCreateRating_thenReturnRatingObject() {
 		Rating rating = new Rating("Moodys Rating 1", "Sand PRating 1", "Fitch Rating 1", 10);
-		ratingService.save(rating);
+			ratingService.save(rating);
 		Rating savedRating = ratingService.findById(rating.getId()).get();
 
 		assertNotNull(savedRating.getId());
