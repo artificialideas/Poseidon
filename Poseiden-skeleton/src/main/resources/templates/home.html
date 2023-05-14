@@ -29,8 +29,8 @@
         </nav>
         <h1>Home page</h1>
     </header>
-    <p>Welcome to Poseiden</p>
-    <p sec:authentication="ADMIN">
+    <h2>Welcome to Poseiden</h2>
+    <p sec:authorize="hasAuthority('ADMIN')">
         <a th:href="@{/user/list}" title="User management">User management</a>
     </p>
 </div>
