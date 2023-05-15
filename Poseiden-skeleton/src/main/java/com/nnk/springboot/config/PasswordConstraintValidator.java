@@ -35,7 +35,5 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(Joiner.on(",").join(validator.getMessages(result))).addConstraintViolation();
         return false;
-        /*return password != null && password.matches("^(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])(?=\\D*\\d)(?=[^!#%]*[!#%])[A-Za-z0-9!#%]{8,30}$")
-                && (password.length() > 8) && (password.length() < 30);*/
     }
 }
