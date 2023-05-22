@@ -1,10 +1,10 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.Rating;
+import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class RatingServiceTest {
 	@Order(4)
 	@DisplayName("Update rating //save()")
 	public void givenExistentRating_whenUpdateRating_thenReturnRatingObject() {
-		int ratingId = 1;
+		int ratingId = 8;
 		Rating savedRating = ratingService.findById(ratingId).get();
 			savedRating.setOrderNumber(11);
 			ratingService.save(savedRating);
