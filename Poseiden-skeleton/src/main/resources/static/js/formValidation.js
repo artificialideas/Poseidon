@@ -1,10 +1,10 @@
 function validateForm() {
-  const fullname = document.getElementById('fullname');
-  const username = document.getElementById('username');
+  //const fullname = document.getElementById('fullname');
+  //const username = document.getElementById('username');
   const password = document.getElementById('password');
-  const role = document.getElementById('role');
+  //const role = document.getElementById('role');
 
-    if (fullname.value === "") {
+    /*if (fullname.value === "") {
         alert("Please enter a full name.");
         fullname.focus();
         return false;
@@ -13,7 +13,7 @@ function validateForm() {
         alert("Please enter a valid username.");
         username.focus();
         return false;
-    }
+    }*/
     // We'll only use password message
     if (password.value === "" || !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?!.*[&%$])(?=.*\W).{8,30}$/).test(password.value)) {
         alert("Please choose a valid password: "+
@@ -23,13 +23,13 @@ function validateForm() {
             "at least 1 symbol, "+
             "no whitespace");
         password.focus();
-        return false;
+        return true; // For this exercice and in order to use Password validator on our Controller (back-end), we need to submit the erroneous form
     }
-    if (role.value === null) {
+    /*if (role.value === null) {
         alert("Please select a role.");
         role.focus();
         return false;
-    }
+    }*/
 
     return true;
 }
