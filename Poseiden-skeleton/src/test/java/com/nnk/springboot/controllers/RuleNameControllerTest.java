@@ -27,8 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RuleNameControllerTest {
-	private RuleName rule;
-
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
@@ -36,15 +34,19 @@ public class RuleNameControllerTest {
 	@Autowired
 	private RuleNameService ruleNameService;
 
+	private RuleName rule;
+
 	@Before
 	public void setup() {
 		rule = new RuleName("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
-			ruleNameService.save(rule);
+		ruleNameService.save(rule);
 	}
 
 	@After
 	public void tearDown() {
-		ruleNameService.delete(rule);
+		if (ruleNameService.findById(rule.getId()).isPresent()) {
+			ruleNameService.delete(rule);
+		}
 	}
 
 	@Test

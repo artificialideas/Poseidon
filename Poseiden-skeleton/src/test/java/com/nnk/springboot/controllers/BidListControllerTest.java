@@ -40,12 +40,14 @@ public class BidListControllerTest {
 	@Before
 	public void setup() {
 		bid = new BidList("Account Test", "Type Test", 10d);
-			bidListService.save(bid);
+		bidListService.save(bid);
 	}
 
 	@After
 	public void tearDown() {
-		bidListService.delete(bid);
+		if (bidListService.findById(bid.getId()).isPresent()) {
+			bidListService.delete(bid);
+		}
 	}
 
 	@Test

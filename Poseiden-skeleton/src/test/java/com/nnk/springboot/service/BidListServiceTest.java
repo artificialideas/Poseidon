@@ -1,6 +1,8 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.BidList;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -26,12 +28,25 @@ public class BidListServiceTest {
 	@Autowired
 	private BidListService bidListService;
 
+	private BidList bid;
+
+	@Before
+	public void setUp() {
+		bid = new BidList("Account Test 1", "Type Test 1", 10d);
+		bidListService.save(bid);
+	}
+
+	@After
+	public void tearDown() {
+		if (bidListService.findById(bid.getId()).isPresent()) {
+			bidListService.delete(bid);
+		}
+	}
+
 	@Test
 	@Order(1)
 	@DisplayName("Save bidList //save()")
 	public void givenNewBidList_whenCreateBidList_thenReturnBidListObject() {
-		BidList bid = new BidList("Account Test 1", "Type Test 1", 10d);
-			bidListService.save(bid);
 		BidList savedBid = bidListService.findById(bid.getId()).get();
 
 		assertNotNull(savedBid.getId());
@@ -51,17 +66,17 @@ public class BidListServiceTest {
 	@Order(3)
 	@DisplayName("Find bidList //findById()")
 	public void givenBidList_whenFindByIdBidList_thenReturnBidListObject() {
-		int bidId = 1;
+		int bidId = bid.getId();
 		BidList bid = bidListService.findById(bidId).get();
 
-		assertEquals(Optional.ofNullable(bid.getId()), Optional.of(1));
+		assertEquals(Optional.ofNullable(bid.getId()), Optional.of(bidId));
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("Update bidList //save()")
 	public void givenExistentBidList_whenUpdateBidList_thenReturnBidListObject() {
-		int bidId = 1;
+		int bidId = bid.getId();
 		BidList savedBid = bidListService.findById(bidId).get();
 			savedBid.setBidQuantity(11d);
 			bidListService.save(savedBid);
@@ -74,7 +89,7 @@ public class BidListServiceTest {
 	@Order(5)
 	@DisplayName("Delete bidList //delete()")
 	public void givenBidListObject_whenDeleteBidList_thenReturn200() {
-		int bidId = 1;
+		int bidId = bid.getId();
 		BidList savedBid = bidListService.findById(bidId).get();
 			bidListService.delete(savedBid);
 		Optional<BidList> bidList = bidListService.findById(bidId);

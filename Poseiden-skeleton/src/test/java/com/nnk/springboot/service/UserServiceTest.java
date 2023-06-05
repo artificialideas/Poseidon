@@ -1,6 +1,8 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.User;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -26,12 +28,25 @@ public class UserServiceTest {
 	@Autowired
 	private UserService userService;
 
+	private User user;
+
+	@Before
+	public void setUp() {
+		user = new User("tester", "testER00:)", "Tester TESTER", "USER");
+		userService.save(user);
+	}
+
+	@After
+	public void tearDown() {
+		if (userService.findById(user.getId()).isPresent()) {
+			userService.delete(user);
+		}
+	}
+
 	@Test
 	@Order(1)
 	@DisplayName("Save user //save()")
 	public void givenNewUser_whenCreateUser_thenReturnUserObject() {
-		User user = new User("tester", "testER00:)", "Tester TESTER", "USER");
-			userService.save(user);
 		User savedUser = userService.findById(user.getId()).get();
 
 		assertNotNull(savedUser.getId());
@@ -51,17 +66,17 @@ public class UserServiceTest {
 	@Order(3)
 	@DisplayName("Find user //findById()")
 	public void givenUser_whenFindByIdUser_thenReturnUserObject() {
-		int userId = 3;
+		int userId = user.getId();
 		User user = userService.findById(userId).get();
 
-		assertEquals(Optional.ofNullable(user.getId()), Optional.of(3));
+		assertEquals(Optional.ofNullable(user.getId()), Optional.of(userId));
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("Update user //save()")
 	public void givenExistentUser_whenUpdateUser_thenReturnUserObject() {
-		int UserId = 3;
+		int UserId = user.getId();
 		User savedUser = userService.findById(UserId).get();
 			savedUser.setUsername("alfa");
 			userService.save(savedUser);
@@ -74,7 +89,7 @@ public class UserServiceTest {
 	@Order(5)
 	@DisplayName("Delete user //delete()")
 	public void givenUserObject_whenDeleteUser_thenReturn200() {
-		int userId = 3;
+		int userId = user.getId();
 		User savedUser = userService.findById(userId).get();
 			userService.delete(savedUser);
 		Optional<User> user = userService.findById(userId);

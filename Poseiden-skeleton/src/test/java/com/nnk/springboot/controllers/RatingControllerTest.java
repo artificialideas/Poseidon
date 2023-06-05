@@ -28,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RatingControllerTest {
-	private Rating rating;
-
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
@@ -37,15 +35,19 @@ public class RatingControllerTest {
 	@Autowired
 	private RatingService ratingService;
 
+	private Rating rating;
+
 	@Before
 	public void setup() {
 		rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
-			ratingService.save(rating);
+		ratingService.save(rating);
 	}
 
 	@After
 	public void tearDown() {
-		ratingService.delete(rating);
+		if (ratingService.findById(rating.getId()).isPresent()) {
+			ratingService.delete(rating);
+		}
 	}
 
 	@Test

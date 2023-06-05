@@ -28,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CurvePointControllerTest {
-	private CurvePoint curve;
-
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
@@ -37,15 +35,19 @@ public class CurvePointControllerTest {
 	@Autowired
 	private CurvePointService curvePointService;
 
+	private CurvePoint curve;
+
 	@Before
 	public void setup() {
 		curve = new CurvePoint(10, 10d, 30d);
-			curvePointService.save(curve);
+		curvePointService.save(curve);
 	}
 
 	@After
 	public void tearDown() {
-		curvePointService.delete(curve);
+		if (curvePointService.findById(curve.getId()).isPresent()) {
+			curvePointService.delete(curve);
+		}
 	}
 
 	@Test

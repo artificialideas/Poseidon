@@ -1,6 +1,8 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.RuleName;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -26,12 +28,25 @@ public class RuleNameServiceTest {
 	@Autowired
 	private RuleNameService ruleNameService;
 
+	private RuleName ruleName;
+
+	@Before
+	public void setUp() {
+		ruleName = new RuleName("Rule Name 1", "Description 1", "Json 1", "Template 1", "SQL 1", "SQL Part 1");
+		ruleNameService.save(ruleName);
+	}
+
+	@After
+	public void tearDown() {
+		if (ruleNameService.findById(ruleName.getId()).isPresent()) {
+			ruleNameService.delete(ruleName);
+		}
+	}
+
 	@Test
 	@Order(1)
 	@DisplayName("Save ruleName //save()")
 	public void givenNewRuleName_whenCreateRuleName_thenReturnRuleNameObject() {
-		RuleName ruleName = new RuleName("Rule Name 1", "Description 1", "Json 1", "Template 1", "SQL 1", "SQL Part 1");
-			ruleNameService.save(ruleName);
 		RuleName savedRule = ruleNameService.findById(ruleName.getId()).get();
 
 		assertNotNull(savedRule.getId());
@@ -51,17 +66,17 @@ public class RuleNameServiceTest {
 	@Order(3)
 	@DisplayName("Find ruleName //findById()")
 	public void givenRuleName_whenFindByIdRuleName_thenReturnRuleNameObject() {
-		int ruleId = 1;
+		int ruleId = ruleName.getId();
 		RuleName ruleName = ruleNameService.findById(ruleId).get();
 
-		assertEquals(Optional.ofNullable(ruleName.getId()), Optional.of(1));
+		assertEquals(Optional.ofNullable(ruleName.getId()), Optional.of(ruleId));
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("Update ruleName //save()")
 	public void givenExistentRuleName_whenUpdateRuleName_thenReturnRuleNameObject() {
-		int ruleId = 1;
+		int ruleId = ruleName.getId();
 		RuleName savedRule = ruleNameService.findById(ruleId).get();
 			savedRule.setName("Rule Name 0");
 			ruleNameService.save(savedRule);
@@ -74,7 +89,7 @@ public class RuleNameServiceTest {
 	@Order(5)
 	@DisplayName("Delete ruleName //delete()")
 	public void givenRuleNameObject_whenDeleteRuleName_thenReturn200() {
-		int ruleId = 1;
+		int ruleId = ruleName.getId();
 		RuleName savedRule = ruleNameService.findById(ruleId).get();
 			ruleNameService.delete(savedRule);
 		Optional<RuleName> ruleName = ruleNameService.findById(ruleId);

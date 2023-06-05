@@ -1,6 +1,8 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.CurvePoint;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -26,12 +28,25 @@ public class CurvePointServiceTest {
 	@Autowired
 	private CurvePointService curvePointService;
 
+	private CurvePoint curvePoint;
+
+	@Before
+	public void setUp() {
+		curvePoint = new CurvePoint(10, 10d, 30d);
+		curvePointService.save(curvePoint);
+	}
+
+	@After
+	public void tearDown() {
+		if (curvePointService.findById(curvePoint.getId()).isPresent()) {
+			curvePointService.delete(curvePoint);
+		}
+	}
+
 	@Test
 	@Order(1)
 	@DisplayName("Save curvePoint //save()")
 	public void givenNewCurvePoint_whenCreateCurvePoint_thenReturnCurvePointObject(){
-		CurvePoint curvePoint = new CurvePoint(10, 10d, 30d);
-			curvePointService.save(curvePoint);
 		CurvePoint savedCurve = curvePointService.findById(curvePoint.getId()).get();
 
 		assertNotNull(savedCurve.getId());
@@ -51,17 +66,17 @@ public class CurvePointServiceTest {
 	@Order(3)
 	@DisplayName("Find curvePoint //findById()")
 	public void givenCurvePoint_whenFindByIdCurvePoint_thenReturnCurvePointObject() {
-		int curveId = 1;
+		int curveId = curvePoint.getId();
 		CurvePoint curvePoint = curvePointService.findById(curveId).get();
 
-		assertEquals(Optional.ofNullable(curvePoint.getId()), Optional.of(1));
+		assertEquals(Optional.ofNullable(curvePoint.getId()), Optional.of(curveId));
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("Update curvePoint //save()")
 	public void givenUpdatedCurvePoint_whenUpdateCurvePoint_thenReturnCurvePointObject() {
-		int curveId = 1;
+		int curveId = curvePoint.getId();
 		CurvePoint savedCurve = curvePointService.findById(curveId).get();
 			savedCurve.setCurveId(11);
 			curvePointService.save(savedCurve);
@@ -74,7 +89,7 @@ public class CurvePointServiceTest {
 	@Order(5)
 	@DisplayName("Delete curvePoint //delete()")
 	public void givenCurvePointObject_whenDeleteCurvePoint_thenReturn200() {
-		int curveId = 1;
+		int curveId = curvePoint.getId();
 		CurvePoint savedCurve = curvePointService.findById(curveId).get();
 			curvePointService.delete(savedCurve);
 		Optional<CurvePoint> curveList = curvePointService.findById(curveId);

@@ -28,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TradeControllerTest {
-	private Trade trade;
-
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
@@ -37,15 +35,19 @@ public class TradeControllerTest {
 	@Autowired
 	private TradeService tradeService;
 
+	private Trade trade;
+
 	@Before
 	public void setup() {
 		trade = new Trade("Trade Account", "Type", 10d);
-			tradeService.save(trade);
+		tradeService.save(trade);
 	}
 
 	@After
 	public void tearDown() {
-		tradeService.delete(trade);
+		if (tradeService.findById(trade.getId()).isPresent()) {
+			tradeService.delete(trade);
+		}
 	}
 
 	@Test

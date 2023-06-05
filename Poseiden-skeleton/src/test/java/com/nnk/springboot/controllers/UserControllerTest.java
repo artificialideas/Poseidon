@@ -40,12 +40,14 @@ public class UserControllerTest {
 	@Before
 	public void setup() {
 		user = new User("tester", "$2a$12$NnNNhZqbTN9/4MrThLfkpumaW.Ut1uhWfCOACXtiWt3/mJqDZYZ52", "Tester TESTER", "USER");
-			userService.save(user);
+		userService.save(user);
 	}
 
 	@After
 	public void tearDown() {
-		userService.delete(user);
+		if (userService.findById(user.getId()).isPresent()) {
+			userService.delete(user);
+		}
 	}
 
 	@Test
@@ -97,7 +99,7 @@ public class UserControllerTest {
 	@WithMockUser(authorities = "ADMIN")
 	@DisplayName("POST - Update user REST API -> negative scenario //updateUser()")
 	public void givenUpdatedUser_whenUpdateUser_thenReturn404() throws Exception {
-		mockMvc.perform(post("/User/update/" + user.getId())
+		mockMvc.perform(post("/user/update/" + user.getId())
 						.param("fullname", "Alfa TESTER")
 						.param("username", "alfa")
 						.param("password", "")
@@ -113,7 +115,7 @@ public class UserControllerTest {
 		User newUser = new User("gamma", "$2a$12$OV.DUhyeZIb9ubdKXI5dLOS3Q.MU6xQwk0cnViHgDUJu1M5LeV2ra", "Gamma TESTER", "USER");
 			userService.save(newUser);
 
-		mockMvc.perform(get("/User/delete/" + newUser.getId()))
+		mockMvc.perform(get("/user/delete/" + newUser.getId()))
 				.andExpect(redirectedUrl("/user/list"));
 	}
 }

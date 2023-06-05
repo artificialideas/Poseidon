@@ -1,6 +1,8 @@
 package com.nnk.springboot.service;
 
 import com.nnk.springboot.domain.Rating;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -26,12 +28,25 @@ public class RatingServiceTest {
 	@Autowired
 	private RatingService ratingService;
 
+	private Rating rating;
+
+	@Before
+	public void setUp() {
+		rating = new Rating("Moodys Rating 1", "Sand PRating 1", "Fitch Rating 1", 10);
+		ratingService.save(rating);
+	}
+
+	@After
+	public void tearDown() {
+		if (ratingService.findById(rating.getId()).isPresent()) {
+			ratingService.delete(rating);
+		}
+	}
+
 	@Test
 	@Order(1)
 	@DisplayName("Save rating //save()")
 	public void givenNewRating_whenCreateRating_thenReturnRatingObject() {
-		Rating rating = new Rating("Moodys Rating 1", "Sand PRating 1", "Fitch Rating 1", 10);
-			ratingService.save(rating);
 		Rating savedRating = ratingService.findById(rating.getId()).get();
 
 		assertNotNull(savedRating.getId());
@@ -51,17 +66,17 @@ public class RatingServiceTest {
 	@Order(3)
 	@DisplayName("Find rating //findById()")
 	public void givenRating_whenFindByIdRating_thenReturnRatingObject() {
-		int ratingId = 1;
+		int ratingId = rating.getId();
 		Rating rating = ratingService.findById(ratingId).get();
 
-		assertEquals(Optional.ofNullable(rating.getId()), Optional.of(1));
+		assertEquals(Optional.ofNullable(rating.getId()), Optional.of(ratingId));
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("Update rating //save()")
 	public void givenExistentRating_whenUpdateRating_thenReturnRatingObject() {
-		int ratingId = 8;
+		int ratingId = rating.getId();
 		Rating savedRating = ratingService.findById(ratingId).get();
 			savedRating.setOrderNumber(11);
 			ratingService.save(savedRating);
@@ -74,7 +89,7 @@ public class RatingServiceTest {
 	@Order(5)
 	@DisplayName("Delete rating //delete()")
 	public void givenRatingObject_whenDeleteRating_thenReturn200() {
-		int ratingId = 1;
+		int ratingId = rating.getId();
 		Rating savedRating = ratingService.findById(ratingId).get();
 			ratingService.delete(savedRating);
 		Optional<Rating> rating = ratingService.findById(ratingId);
